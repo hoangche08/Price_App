@@ -1,0 +1,99 @@
+﻿<Window x:Class="Price_App.Window.PriceWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Price_App"
+        xmlns:viewModel="clr-namespace:Price_App.ViewModel"
+        xmlns:model="clr-namespace:Price_App.Model"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewModel:PriceViewModel}"
+        Title="Price Application" Height="500" Width="800">
+ 
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Left">
+            <Label Content="Search Best Buy Products:"
+                   Margin="30,20,30,0"/>
+            <TextBox Text="{Binding Description}" Margin="-100,0,0,10" Width="150"/>
+            <Button Content="Search" 
+                    Margin="-100,0,0,10"
+                    Width="150"
+                    Height="20"
+                    Command="{Binding SearchWebsiteCommand}"/>
+   
+            <ListBox ItemsSource="{Binding DataContext.ScrapedItems, RelativeSource={RelativeSource AncestorType=Window}}"
+                      d:DataContext="{d:DesignInstance model:ScrapedItem}"
+                      Margin="30,0,30,0"
+                      Height="300"
+                      Width="250"
+                      SelectedItem="{Binding DataContext.SelectedScrapedItem, RelativeSource={RelativeSource AncestorType=Window}}">
+            </ListBox>
+            <!--
+            <ListBox Height="280" 
+                     Margin="30,0,30,0"
+                     ItemsSource="{Binding ScrapedItems}">
+
+            </ListBox>
+            -->
+        </StackPanel>
+ 
+ 
+        <StackPanel DockPanel.Dock="Right">
+            <Label Content="Sorting:"
+                   HorizontalAlignment="Left"
+                   Margin="0,10,0,0"/>
+            <ComboBox Width="100"
+                      SelectedIndex="0"
+                      SelectedItem="{Binding SelectedSortingMethod}"
+                      HorizontalAlignment="Left">
+                <ComboBoxItem>
+                    Price
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    Provider
+                </ComboBoxItem>
+            </ComboBox>
+            <Grid>
+                <Button Content="Load" 
+                        HorizontalAlignment="Left"
+                        Margin="0,10,0,10"
+                        Width="100"
+                        Height="20"
+                        Command="{Binding SelectItemCommand}"/>
+                <Label Content="{Binding PricedItems.Count}"
+                       ContentStringFormat="Showing Results From {0} Sites"
+                       HorizontalAlignment="Right"
+                       Width="Auto"
+                       Margin="0,10,30,10"/>
+            </Grid>
+            
+            <ListView
+                ItemsSource="{Binding DataContext.PricedItems, RelativeSource={RelativeSource AncestorType=Window}}"
+                d:DataContext="{d:DesignInstance model:PricedItem}"
+                Height="300" 
+                Margin="0,0,30,0"
+                >
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="60">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <Button Padding="5" Content="Open" Command="{Binding DataContext.OpenUrlCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding }"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="100" Header="Provider" DisplayMemberBinding="{Binding Provider}"/>
+                        <GridViewColumn Width="75" Header="Price" DisplayMemberBinding="{Binding Price, StringFormat='{}{0:C}'}"/>
+                        <GridViewColumn Width="220" Header="URL" DisplayMemberBinding="{Binding WebSiteUrl}"/>
+
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            
+        </StackPanel>
+ 
+    </DockPanel>
+</Window>
